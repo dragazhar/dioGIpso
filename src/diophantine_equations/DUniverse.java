@@ -57,9 +57,9 @@ public class DUniverse {
 
 	while ((epoch <= age) && (globalBestMass < 1.0)) {
 
-	   //  step_giPSO();
-	    //step_PSO();
-	 step_SHC();
+	    // step_giPSO();
+	    step_PSO();
+	 //step_SHC();
 
 	    evaluate();
 
@@ -384,10 +384,10 @@ if (globalBestMass < 1.0){
 	    DCoordinates rndCoord = new DCoordinates();
 	    // generate random body
 
-	   // rndCoord.generateNewCoordinates(equation.getLowBound(),
-	    // equation.getUpBound());
+	    rndCoord.generateNewCoordinates(equation.getLowBound(),
+	    equation.getUpBound());
 
-	rndCoord.generateNewCoordinates(-50, -45);
+	//rndCoord.generateNewCoordinates(-50, -45);
 	    // add random body to set
 	    DBody rndBody = new DBody(rndCoord);
 	    rndBody.bestPosition = new DCoordinates(rndBody.position.getX(),
