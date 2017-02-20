@@ -1,6 +1,5 @@
 package diophantine_equations;
 
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -30,7 +29,6 @@ import javax.imageio.ImageIO;
 
 import org.jfree.chart.renderer.xy.XYDotRenderer;
 
-
 public class DGraph {
     static ArrayList<ArrayList<Double>> color = new ArrayList<ArrayList<Double>>();
 
@@ -38,7 +36,7 @@ public class DGraph {
 	    TreeMap<DKey, DPoint> seriesPoints) {
 	XYSeries series = new XYSeries(seriesName);
 	ArrayList<Double> c = new ArrayList<Double>();
-	
+
 	for (DPoint p : seriesPoints.values()) {
 	    double x = (double) p.getX();
 	    double y = (double) p.getY();
@@ -50,12 +48,12 @@ public class DGraph {
     }
 
     public static void draw(String chartName,
-	    TreeMap<DKey, DPoint> seriesPoints, 
-	    int pointSize, double range, int x, int y, ArrayList<DCoordinates> track) throws IOException {
+	    TreeMap<DKey, DPoint> seriesPoints, int pointSize, double range,
+	    int x, int y, ArrayList<DCoordinates> track) throws IOException {
 
 	XYSeriesCollection xyDataset = new XYSeriesCollection();
 	color = new ArrayList<ArrayList<Double>>();
-	
+
 	xyDataset.addSeries(addSeries("empty string", seriesPoints));
 
 	JFreeChart chart = ChartFactory.createScatterPlot(chartName, "", "",
@@ -67,38 +65,32 @@ public class DGraph {
 	XYPlot xyPlot = chart.getXYPlot();
 	xyPlot.setRangeGridlinesVisible(false);
 	xyPlot.setDomainGridlinesVisible(false);
-	xyPlot.getRangeAxis().setRange(range*(-1), range);
-	xyPlot.getDomainAxis().setRange(range*(-1), range);
-	
+	xyPlot.getRangeAxis().setRange(range * (-1), range);
+	xyPlot.getDomainAxis().setRange(range * (-1), range);
+
 	xyPlot.setSeriesRenderingOrder(SeriesRenderingOrder.FORWARD);
-	//show circle around global best
-	XYShapeAnnotation a1 = new XYShapeAnnotation(
-		new Ellipse2D.Double(x - 2, y - 2, 2 + 2, 2 + 2), new BasicStroke(1.0f), Color.white
-            );
-	 xyPlot.addAnnotation(a1);
-	 //show circle around track
-	
-	 for(int i=0; i<track.size();i++){
-	
-	     xyPlot.addAnnotation(new XYShapeAnnotation(
-			new Ellipse2D.Double(track.get(i).getX() - 1, track.get(i).getY() - 1, 2,2), new BasicStroke(1.0f), Color.cyan
-		            ));
-	 }
-	 
-		
-		 
-	 
+	// show circle around global best
+	XYShapeAnnotation a1 = new XYShapeAnnotation(new Ellipse2D.Double(
+		x - 2, y - 2, 2 + 2, 2 + 2), new BasicStroke(1.0f), Color.white);
+	xyPlot.addAnnotation(a1);
+	// show circle around track
+
+	for (int i = 0; i < track.size(); i++) {
+
+	    xyPlot.addAnnotation(new XYShapeAnnotation(new Ellipse2D.Double(
+		    track.get(i).getX() - 1, track.get(i).getY() - 1, 2, 2),
+		    new BasicStroke(1.0f), Color.cyan));
+	}
+
 	chart.removeLegend();
 
+	MyRenderer renderer = new MyRenderer();
+	renderer.setDotWidth(pointSize);
+	renderer.setDotHeight(pointSize);
+	xyPlot.setRenderer(renderer);
 
-	    MyRenderer renderer = new MyRenderer();
-	    renderer.setDotWidth(pointSize);
-	    renderer.setDotHeight(pointSize);
-	    xyPlot.setRenderer(renderer);
-	
-	 
-	//showChart(chartName, chart);
-	OutputStream o=new FileOutputStream("dio\\"+chartName+".png");
+	// showChart(chartName, chart);
+	OutputStream o = new FileOutputStream("dio\\" + chartName + ".png");
 	writeAsPNG(chartName, chart, o, 600, 600);
 
     }
@@ -143,8 +135,9 @@ public class DGraph {
 		    double db = (color.get(row).get(col));
 		    float fl = (float) db;
 
-		    //return Color.getHSBColor(fl, 1-fl, 1 - fl);
-		    return Color.getHSBColor(1-fl, 1-(1-fl),  1-(1-fl));
+		    // return Color.getHSBColor(fl, 1-fl, 1 - fl);
+		    return Color
+			    .getHSBColor(1 - fl, 1 - (1 - fl), 1 - (1 - fl));
 		}
 
 	    } else {

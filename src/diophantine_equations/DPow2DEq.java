@@ -1,6 +1,5 @@
 package diophantine_equations;
 
-
 //two dimensional diophantine equation
 //ax+by=d
 public class DPow2DEq {
@@ -8,12 +7,10 @@ public class DPow2DEq {
     private int a = 1;
     private int b = 1;
     private int d = 0;
-    private int pow=1;
+    private int pow = 1;
 
     private int upBound = 0;
     private int lowBound = 0;
-
-    
 
     public DPow2DEq(int a, int b, int d, int pow) {
 	super();
@@ -25,7 +22,8 @@ public class DPow2DEq {
 
     public int diffBtwSolutions(int x, int y) {
 	int diff = 0;
-	int dd = a *(int) Math.pow(x, this.pow) + b * (int)Math.pow(y, this.pow);
+	int dd = a * (int) Math.pow(x, this.pow) + b
+		* (int) Math.pow(y, this.pow);
 	diff = Math.abs(d - dd);
 	return diff;
     }
@@ -72,7 +70,7 @@ public class DPow2DEq {
 
     @Override
     public String toString() {
-	return a+"x^"+pow+"+"+b+"y^"+pow+"="+d;
+	return a + "x^" + pow + "+" + b + "y^" + pow + "=" + d;
     }
 
 }

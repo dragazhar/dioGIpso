@@ -2,7 +2,6 @@ package diophantine_equations;
 
 import java.util.Random;
 
-
 public class DSearchLaws {
 
     public static double euclidianDistance(DCoordinates p1, DCoordinates p2) {
@@ -117,33 +116,34 @@ public class DSearchLaws {
 	// System.out.println("New position: " + b.position);
 
     }
-    
-    public static void updatePosition_HC (DBody b,DCoordinates n, int upBound, int lowBound) {
-   	// System.out.println("Update position");
-   	// System.out.println("Old position " + b.position);
-   	// System.out.println("Velocity " + b.velocity);
-   	int px = n.getX() ;
 
-   	while (px > upBound) {
-   	    px = px - upBound;
-   	}
-   	while (px < lowBound) {
-   	    px = px + (-lowBound);
-   	}
+    public static void updatePosition_HC(DBody b, DCoordinates n, int upBound,
+	    int lowBound) {
+	// System.out.println("Update position");
+	// System.out.println("Old position " + b.position);
+	// System.out.println("Velocity " + b.velocity);
+	int px = n.getX();
 
-   	int py = n.getY();
-   	while (py > upBound) {
-   	    py = py - upBound;
-   	}
-   	while (py < lowBound) {
-   	    py = py + (-lowBound);
-   	}
+	while (px > upBound) {
+	    px = px - upBound;
+	}
+	while (px < lowBound) {
+	    px = px + (-lowBound);
+	}
 
-   	b.position.setX(px);
-   	b.position.setY(py);
-   	// System.out.println("New position: " + b.position);
+	int py = n.getY();
+	while (py > upBound) {
+	    py = py - upBound;
+	}
+	while (py < lowBound) {
+	    py = py + (-lowBound);
+	}
 
-       }
+	b.position.setX(px);
+	b.position.setY(py);
+	// System.out.println("New position: " + b.position);
+
+    }
 
     public static double computeForce(int g, double m1, double m2,
 	    DCoordinates p1, DCoordinates p2) {

@@ -1,11 +1,8 @@
 package diophantine_equations;
 
-
 public class DPoint extends DCoordinates {
     private DKey key = new DKey(0, 0);
     private double value = -1;
-  
-    
 
     public DPoint(int x, int y) {
 	super();
@@ -13,7 +10,8 @@ public class DPoint extends DCoordinates {
 	this.y = y;
 	this.setKey(new DKey(x, y));
     }
-    public DPoint(DCoordinates coord){
+
+    public DPoint(DCoordinates coord) {
 	super();
 	this.x = coord.getX();
 	this.y = coord.getY();
@@ -21,7 +19,7 @@ public class DPoint extends DCoordinates {
     }
 
     public void computeValue(int v, int max) {
-	this.value = 1-((double)v /  (double)max);
+	this.value = 1 - ((double) v / (double) max);
     }
 
     public DKey getKey() {
@@ -40,12 +38,9 @@ public class DPoint extends DCoordinates {
 	this.value = value;
     }
 
-    
-
     @Override
     public String toString() {
-	return "Point [x="+ x +", y="+y+", value=" + value+"]";
+	return "Point [x=" + x + ", y=" + y + ", value=" + value + "]";
     }
-   
 
 }

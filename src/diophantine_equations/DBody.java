@@ -1,6 +1,5 @@
 package diophantine_equations;
 
-
 public class DBody {
     DCoordinates position;
     DCoordinates velocity;
@@ -11,8 +10,8 @@ public class DBody {
 
     double mass;
     double bestMass;
-    
-    boolean track=false;
+
+    boolean track = false;
 
     public DBody(DCoordinates position) {
 	this.position = new DCoordinates(position.getX(), position.getY());
@@ -78,11 +77,11 @@ public class DBody {
     }
 
     public boolean isTrackable() {
-        return track;
+	return track;
     }
 
     public void setTrackable(boolean track) {
-        this.track = track;
+	this.track = track;
     }
 
 }

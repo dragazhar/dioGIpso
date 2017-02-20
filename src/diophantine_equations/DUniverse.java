@@ -11,7 +11,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-
 public class DUniverse {
     // unique checked points
     static public TreeMap<DKey, DPoint> points = new TreeMap<DKey, DPoint>();
@@ -40,26 +39,25 @@ public class DUniverse {
     static public ArrayList<DCoordinates> track = new ArrayList<DCoordinates>();
 
     public static void main(String[] args) throws IOException {
-	//runStat(1000);
+	// runStat(1000);
 	runOnce();
     }
 
-    static void runOnce() throws IOException{
+    static void runOnce() throws IOException {
 	init();
 	System.out.println("Size of the universe: " + universeSize);
 	bigBang();
-	//printInitialSwarm(bodies);
-	//readSwarm();
+	// printInitialSwarm(bodies);
+	// readSwarm();
 	draw(String.valueOf(epoch), bestPosition.getX(), bestPosition.getY(),
 		track);
-	epoch++;	
-	
+	epoch++;
 
 	while ((epoch <= age) && (globalBestMass < 1.0)) {
 
 	    // step_giPSO();
 	    step_PSO();
-	 //step_SHC();
+	    // step_SHC();
 
 	    evaluate();
 
@@ -80,87 +78,90 @@ public class DUniverse {
 		+ (globalBestMass == 1.0));
 	System.out.println(bestPosition);
 	System.out.println(points.size() + " points checked");
-	
 
 	// compute the all set of points
 	enumerateAllPoints();
 	draw("all", bestPosition.getX(), bestPosition.getY(), track);
     }
-    
-    static void runStat(int iterations) throws IOException{
+
+    static void runStat(int iterations) throws IOException {
 	ArrayList<Integer> pointsChecked = new ArrayList<Integer>();
 	ArrayList<Integer> epochLast = new ArrayList<Integer>();
-	int fails=0;
-for (int i=0; i<iterations; i++){
-    init();
-	bigBang();
-   // readSwarm();
-	epoch++;
-	while ((epoch <= age) && (globalBestMass < 1.0)) {
-
-	  step_giPSO();
-	     
-	 //   step_PSO();
-	 // step_SHC();
-
-	    evaluate();
-
-
+	int fails = 0;
+	for (int i = 0; i < iterations; i++) {
+	    init();
+	    bigBang();
+	    // readSwarm();
 	    epoch++;
+	    while ((epoch <= age) && (globalBestMass < 1.0)) {
+
+		step_giPSO();
+
+		// step_PSO();
+		// step_SHC();
+
+		evaluate();
+
+		epoch++;
+	    }
+	    if (globalBestMass < 1.0) {
+		fails++;
+	    }
+	    // System.out.println("Found at epoch: " + (epoch - 1) + " out of "
+	    // + age);
+	    /*
+	     * System.out.println("The best solution is found: " +
+	     * (globalBestMass == 1.0));
+	     */
+	    // System.out.println(bestPosition);
+	    // System.out.println(points.size() + " points checked");
+	    // log((epoch - 1),points.size());
+	    pointsChecked.add(points.size());
+	    epochLast.add(epoch - 1);
+	    epoch = 0;
+	    universeSize = 0;
+	    points = new TreeMap<DKey, DPoint>();
+	    bodies = new ArrayList<DBody>();
+	    globalBestMass = -1;
+	    bestPosition = null;
 	}
-if (globalBestMass < 1.0){
-    fails++;
-}
-	//System.out.println("Found at epoch: " + (epoch - 1) + " out of " + age);
-	/*System.out.println("The best solution is found: "
-		+ (globalBestMass == 1.0));*/
-	//System.out.println(bestPosition);
-	//System.out.println(points.size() + " points checked");
-	//log((epoch - 1),points.size());
-	 pointsChecked.add(points.size());
-	 epochLast.add(epoch - 1);
-	epoch=0;
-	universeSize = 0;
-	points= new TreeMap<DKey, DPoint>();
-	bodies = new ArrayList<DBody>();
-	   globalBestMass=-1;
-	    bestPosition=null;
-    }
 
 	// compute the all set of points
-	//enumerateAllPoints();
+	// enumerateAllPoints();
 
-	//compute stat
-	double averageEL=0;
-	for(Integer el:epochLast){
-	  averageEL+=  (double)el/epochLast.size();
-	 
+	// compute stat
+	double averageEL = 0;
+	for (Integer el : epochLast) {
+	    averageEL += (double) el / epochLast.size();
+
 	}
 
-	
-	double deviationEL=0;
-	for(Integer el:epochLast){
-	    deviationEL+= Math.pow((double)(el- averageEL), 2) /(double)(epochLast.size()-1);
+	double deviationEL = 0;
+	for (Integer el : epochLast) {
+	    deviationEL += Math.pow((double) (el - averageEL), 2)
+		    / (double) (epochLast.size() - 1);
 	}
-	System.out.println("Found at epoch: "+" average="+averageEL+" deviation="+Math.sqrt(deviationEL));
-		
-	
-	double averagePC=0;
-	for(Integer pc:pointsChecked){
-	  averagePC+=  (double)pc/pointsChecked.size();
-	  
+	System.out.println("Found at epoch: " + " average=" + averageEL
+		+ " deviation=" + Math.sqrt(deviationEL));
+
+	double averagePC = 0;
+	for (Integer pc : pointsChecked) {
+	    averagePC += (double) pc / pointsChecked.size();
+
 	}
-	double deviationPC=0;
-	for(Integer pc:pointsChecked){
-	    deviationPC+= Math.pow((double)(pc- averagePC), 2)/(double)(pointsChecked.size()-1);
+	double deviationPC = 0;
+	for (Integer pc : pointsChecked) {
+	    deviationPC += Math.pow((double) (pc - averagePC), 2)
+		    / (double) (pointsChecked.size() - 1);
 	}
-	
-	System.out.println("Point checked: "+" average="+averagePC+" deviation="+Math.sqrt(deviationPC));
-	System.out.println("Number of fails: "+fails);
+
+	System.out.println("Point checked: " + " average=" + averagePC
+		+ " deviation=" + Math.sqrt(deviationPC));
+	System.out.println("Number of fails: " + fails);
 	enumerateAllPoints();
-	
+
     }
-    
+
     static void step_giPSO() {
 	for (DBody b : bodies) {
 
@@ -281,17 +282,14 @@ if (globalBestMass < 1.0){
 	    res.close();
 	}
     }
-    
+
     static void log(int gen, int points) {
 	PrintWriter res = null;
 	try {
 	    res = new PrintWriter(new BufferedWriter(new FileWriter(new File(
 		    "dio\\log.txt"), true)));
 
-	    
-		res.println(gen + " " + points);
-
-
+	    res.println(gen + " " + points);
 
 	} catch (IOException e) {
 	    System.err.println("Error in input/output process...");
@@ -299,25 +297,21 @@ if (globalBestMass < 1.0){
 	    res.close();
 	}
     }
-    
+
     static void log2() {
-   	PrintWriter res = null;
-   	try {
-   	    res = new PrintWriter(new BufferedWriter(new FileWriter(new File(
-   		    "dio\\log2.txt"), true)));
+	PrintWriter res = null;
+	try {
+	    res = new PrintWriter(new BufferedWriter(new FileWriter(new File(
+		    "dio\\log2.txt"), true)));
 
-   	    
-   		res.println(globalBestMass);
+	    res.println(globalBestMass);
 
-
-
-   	} catch (IOException e) {
-   	    System.err.println("Error in input/output process...");
-   	} finally {
-   	    res.close();
-   	}
-       }
-    
+	} catch (IOException e) {
+	    System.err.println("Error in input/output process...");
+	} finally {
+	    res.close();
+	}
+    }
 
     static void readSwarm() throws IOException {
 	BufferedReader dataR = new BufferedReader(new FileReader(new File(
@@ -341,35 +335,33 @@ if (globalBestMass < 1.0){
 		    }
 
 		}
-		int x= Integer.parseInt(xS);
-		int y= Integer.parseInt(yS);
-		
-		
-		DCoordinates coord=new DCoordinates(x, y);
-		 DBody body = new DBody(coord);
-		    body.bestPosition = new DCoordinates(body.position.getX(),
+		int x = Integer.parseInt(xS);
+		int y = Integer.parseInt(yS);
+
+		DCoordinates coord = new DCoordinates(x, y);
+		DBody body = new DBody(coord);
+		body.bestPosition = new DCoordinates(body.position.getX(),
+			body.position.getY());
+
+		body.setVelocity(new DCoordinates(0, 0));
+
+		bodies.add(body);
+		// initiate global best position and mass
+		if ((bestPosition == null)) {
+
+		    bestPosition = new DCoordinates(body.position.getX(),
 			    body.position.getY());
+		    globalBestMass = body.getMass();
+		}
 
-		 
-		    body.setVelocity(new DCoordinates(0, 0));
+		evaluate();
 
-		    bodies.add(body);
-		    // initiate global best position and mass
-		    if ((bestPosition == null)) {
-
-			bestPosition = new DCoordinates(body.position.getX(),
-				body.position.getY());
-			globalBestMass = body.getMass();
-		    }
-
-		    evaluate();
-		    
-		//System.out.println(x+"   "+y);
+		// System.out.println(x+"   "+y);
 
 	    }
 	    bodies.get(5).setTrackable(true);
-		track.add(new DCoordinates(bodies.get(5).position.getX(),
-			bodies.get(5).position.getY()));
+	    track.add(new DCoordinates(bodies.get(5).position.getX(), bodies
+		    .get(5).position.getY()));
 
 	} catch (IOException e) {
 	    System.err.println("Error in input/output process...");
@@ -385,17 +377,19 @@ if (globalBestMass < 1.0){
 	    // generate random body
 
 	    rndCoord.generateNewCoordinates(equation.getLowBound(),
-	    equation.getUpBound());
+		    equation.getUpBound());
 
-	//rndCoord.generateNewCoordinates(-50, -45);
+	    // rndCoord.generateNewCoordinates(-50, -45);
 	    // add random body to set
 	    DBody rndBody = new DBody(rndCoord);
 	    rndBody.bestPosition = new DCoordinates(rndBody.position.getX(),
 		    rndBody.position.getY());
 
-	  //  DCoordinates rndCoord2 = new DCoordinates();`
-	   /* rndCoord2.generateNewCoordinates(equation.getLowBound(),
-		    equation.getUpBound());*/
+	    // DCoordinates rndCoord2 = new DCoordinates();`
+	    /*
+	     * rndCoord2.generateNewCoordinates(equation.getLowBound(),
+	     * equation.getUpBound());
+	     */
 	    // rndBody.setVelocity(rndCoord2);
 	    rndBody.setVelocity(new DCoordinates(0, 0));
 
@@ -409,9 +403,9 @@ if (globalBestMass < 1.0){
 		globalBestMass = rndBody.getMass();
 	    }
 	    evaluate();
-	   
+
 	}
-	
+
 	bodies.get(5).setTrackable(true);
 	track.add(new DCoordinates(bodies.get(5).position.getX(),
 		bodies.get(5).position.getY()));
@@ -421,24 +415,24 @@ if (globalBestMass < 1.0){
     static void init() {
 	// Define equation
 	// Power 1
-	equation = new DPow2DEq(4, 9, 91,1);//11 solutions in range
+	equation = new DPow2DEq(4, 9, 91, 1);// 11 solutions in range
 	// equation = new DPow2DEq(10, 7, 97,1);//10 solutions in range
 	// equation = new DPow2DEq(24, 15, 9,1);//13 solutions in range
-	//equation = new DPow2DEq(19, 23, 3, 1);// 4 solutions in range
+	// equation = new DPow2DEq(19, 23, 3, 1);// 4 solutions in range
 
 	// Power 2
 	// equation=new DPow2DEq(1,1,625,2);//x^2+y^2=625 20 solutions in range
-	//equation = new DPow2DEq(1, 1, 149, 2);// x^2+y^2=149 8 solutions in
-					      // range
+	// equation = new DPow2DEq(1, 1, 149, 2);// x^2+y^2=149 8 solutions in
+	// range
 
 	// Power 3
-	//equation = new DPow2DEq(1, 1, 1008,3);//2 solutions in range
+	// equation = new DPow2DEq(1, 1, 1008,3);//2 solutions in range
 
 	// Power 4
-	//equation = new DPow2DEq(1, 1, 1921, 4);//8 solutions in range
+	// equation = new DPow2DEq(1, 1, 1921, 4);//8 solutions in range
 
 	// Power 5
-	//equation = new DPow2DEq(1, 1, 19932, 5);//2 solutions in range
+	// equation = new DPow2DEq(1, 1, 19932, 5);//2 solutions in range
 
 	// Define upper and lower bounds of the range
 	equation.setUpBound(50);
@@ -451,10 +445,10 @@ if (globalBestMass < 1.0){
 		equation.getLowBound());
 	if (mU < mL) {
 	    max = mL;
-	    //System.out.println("Value at lower left corner: " + max);
+	    // System.out.println("Value at lower left corner: " + max);
 	} else {
 	    max = mU;
-	    //System.out.println("Value at upper right corner: " + max);
+	    // System.out.println("Value at upper right corner: " + max);
 	}
 
 	// Compute size of the universe as % from total amount of points
@@ -462,7 +456,6 @@ if (globalBestMass < 1.0){
 		.getUpBound()));
 
 	universeSize = (int) Math.round(pc * s * s);
-
 
     }
 
